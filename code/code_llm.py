@@ -290,10 +290,15 @@ response_chain.invoke(
 
 ######employ the ConversationalRetrievalChain and AzureChatOpenAI LLM for querying based on documents##
 
-from text_loader import TextLoader
-from text_splitter import CharacterTextSplitter
-from chroma import Chroma
-from azure_openai_embeddings import AzureOpenAIEmbeddings
+#from text_loader import TextLoader
+#from text_splitter import CharacterTextSplitter
+#from chroma import Chroma
+#from azure_openai_embeddings import AzureOpenAIEmbeddings
+
+from langchain.document_loaders import TextLoader
+from langchain.text_splitter import CharacterTextSplitter
+from langchain.vectorstores import Chroma
+from langchain_openai import AzureOpenAIEmbeddings
 
 loader = TextLoader("guide_data.txt")
 documents = loader.load()
@@ -407,7 +412,7 @@ template = """You are an assistant for question-answering tasks. """
 
 def get_chunks(question,k):
   loaded_vectordb = Chroma(persist_directory= "C:/ data_st/chroma_db", embedding_function=embeddings_model)
-  docs = loaded_vectordb.max_marginal_relevance_search(question)
+  docs = loaded_vectordb.max_marginal_relevance_search(question, k=5)
   chunks = ' '.join([chunk.page_content for chunk in docs])
   return chunks
 
